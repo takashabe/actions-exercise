@@ -27,20 +27,15 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          stable: 'false'
           go-versoin: '1.14.3'
-
-      - name: read change_services
-        run: |
-          env
 
       - name: test
         run: |
           MODULE_FILE=go.mod
           for c in $(cat $CHANGEDS); do
             for target in $(find $c -type f -name $MODULE_FILE -printf '%h\n'); do
-              pushd $target
+              cd $target
               echo "Exec test for $target..."; go test 
-              popd
+              cd -
             done
           done
