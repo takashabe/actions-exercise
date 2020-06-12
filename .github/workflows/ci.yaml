@@ -22,7 +22,7 @@ jobs:
 
       - name: service changed discovery
         run: |
-          changed_services=$(git diff origin/master --name-only | grep / | awk 'BEGIN {FS="/"} {print $1"/"$2"}' | uniq)
+          changed_services=$(git diff origin/master --name-only | grep / | awk 'BEGIN {FS="/"} {print $1"/"$2}' | uniq)
           for s in $changed_services
           do
             echo $s
