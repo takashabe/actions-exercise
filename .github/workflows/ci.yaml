@@ -9,10 +9,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout target branch
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: checkout master branch
+        if: github.ref != 'refs/heads/master'
         run: |
           # checkout multiple ranch (Added master)
           # https://github.com/actions/checkout/issues/214
