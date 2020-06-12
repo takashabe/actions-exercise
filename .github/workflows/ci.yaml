@@ -33,3 +33,15 @@ jobs:
       - name: read change_services
         run: |
           env
+
+      - name: test
+        run: |
+          MODULE_FILE=go.mod
+
+          for c in $(cat $CHANGEDS); do
+            for target in $(find $c -type f -name $MODULE_FILE -printf '%h\n'); do
+              pushd $target
+              echo "Exec test for $target..."; go test 
+              popd
+            done
+          done
