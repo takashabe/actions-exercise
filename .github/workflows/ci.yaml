@@ -31,9 +31,8 @@ jobs:
 
       - name: test
         run: |
-          MODULE_FILE=go.mod
           for c in $(cat $CHANGEDS); do
-            for target in $(find $c -type f -name $MODULE_FILE -printf '%h\n'); do
+            for target in $(find $c -type f -name go.mod -printf '%h\n'); do
               cd $target
               echo "Exec test for $target..."; go test 
               cd -
