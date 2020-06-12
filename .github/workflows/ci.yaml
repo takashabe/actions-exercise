@@ -28,3 +28,8 @@ jobs:
             echo $s
           done
           echo $changed_services > _changed_services
+
+      - uses: actions/setup-go@v2
+        with:
+          stable: 'false'
+          go-versoin: '1.14.3'
