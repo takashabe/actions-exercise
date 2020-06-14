@@ -22,8 +22,8 @@ jobs:
 
       - name: service changed discovery
         run: |
-          CHANGEDS=$(git diff origin/master --name-only | grep / | awk 'BEGIN {FS="/"} {print $1"/"$2}' | uniq)
-          echo "::set-env name=CHANGES::$(echo $CHANGEDS)"
+          CHANGES=$(git diff origin/master --name-only | grep / | awk 'BEGIN {FS="/"} {print $1"/"$2}' | uniq)
+          echo "::set-env name=CHANGES::$(echo $CHANGES)"
 
       - uses: actions/setup-go@v2
         with:
@@ -31,10 +31,8 @@ jobs:
 
       - name: test
         run: |
-          echo "changes=$CHANGES"
-          for c in $(cat $CHANGEDS)
+          for c in $CHANGES
           do
-            echo "c=$c"
             for target in $(find $c -type f -name go.mod -printf '%h\n')
             do
               cd $target
