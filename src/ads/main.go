@@ -1,11 +1,9 @@
 package main
 
-import "log"
-
-func init() {
-	log.SetFlags(log.Lshortfile | log.LstdFlags)
-}
+import (
+	"github.com/sirupsen/logrus"
+)
 
 func main() {
-	log.Println("ads")
+	logrus.Info("ads")
 }
