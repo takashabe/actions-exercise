@@ -11,9 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: update image
-        working-directory: src/cache/deployments/overlays
-        run: |
-          kustomize edit set image app_image=nginx@foo
+        uses: stefanprodan/kube-tools@v1
+        with:
+          kustomize: 3.8.1
+          command: |
+            cd src/cache/deployments/overlays/
+            echo "before ---------------"
+            kustomize build .
+            kustomize edit set image app_image=nginx@foo
+            echo "after ---------------"
+            kustomize build .
       - name: git commit
         run: |
           git switch -c build-$GITHUB_RUN_ID origin/master
