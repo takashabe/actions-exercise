@@ -1,0 +1,18 @@
+name: pullrequest
+
+on:
+  push:
+    branches:
+    - "*"
+    - "!master"
+
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: create pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          hub pr list
