@@ -24,8 +24,10 @@ jobs:
       - name: git commit
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKING_BRANCH: build-$GITHUB_RUN_ID
         run: |
           git config --global user.name "Github Actions"
-          git switch -c build-$GITHUB_RUN_ID origin/master
+          git switch -c $WORKING_BRANCH origin/master
           git commit -am "buiding image"
-          hub pull-request -m "test pr" --no-edit
+          git push origin $WORKING_BRANCH
+          hub pull-request -m "test pr"
