@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache
+spec:
+  template:
+    spec:
+      containers:
+        - name: app
+          image: app_image
+          env:
+          - name: "overlays"
+            value: "true"
