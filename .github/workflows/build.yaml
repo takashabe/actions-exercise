@@ -22,7 +22,10 @@ jobs:
             echo "after ---------------"
             kustomize build .
       - name: git commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git config --global user.name "Github Actions"
           git switch -c build-$GITHUB_RUN_ID origin/master
           git commit -am "buiding image"
           hub pull-request -m "test pr" --no-edit
