@@ -24,7 +24,7 @@ jobs:
       - name: git commit
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WORKING_BRANCH: build-$GITHUB_RUN_ID
+          WORKING_BRANCH: build-${{ github.run_id }}
         run: |
           git config --global user.name "Github Actions"
           git switch -c $WORKING_BRANCH origin/master
