@@ -1,0 +1,21 @@
+name: build
+
+on:
+  push:
+    branches:
+    - "master"
+
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: update image
+        working-directory: src/cache/deployments/overlays
+        run: |
+          kustomize edit set image app_image=nginx@foo
+      - name: git commit
+        run: |
+          git switch -c build-$GITHUB_RUN_ID origin/master
+          git commit -am "buiding image"
+          hub pull-request -m "test pr" --no-edit
