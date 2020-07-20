@@ -3,6 +3,7 @@ name: pullrequest
 on:
   push:
     branches:
+    - "*"
     - "!master"
 
 jobs:
