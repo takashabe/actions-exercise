@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 images:
-- digest: foo
+- digest: refs/heads/master-16faa41c041815053414808453adc7324f821e51
   name: app_image
   newName: nginx
 
