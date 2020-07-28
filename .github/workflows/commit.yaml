@@ -1,18 +1,21 @@
-name: pullrequest
+name: manual
 
 on:
-  push:
-    branches:
-    - "*"
-    - "!master"
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "deploy cluster(dev/stg/prd)"
+        required: true
+        default: "stg"
+      build_targets:
+        description: "paths to build.yaml. multiple files are separated by ','"
+        required: true
 
 jobs:
-  create:
+  printInputs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: create pr
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          hub pr list
+    - run: |
+        echo "env: ${{ github.event.inputs }}"
+        echo "build_targets: ${{ github.event.inputs }}"
+        echo "all: ${{ github.event.inputs }}"
