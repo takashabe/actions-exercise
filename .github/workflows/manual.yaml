@@ -1,0 +1,20 @@
+name: manual
+
+on: [push, workflow_dispatch]
+    # inputs:
+    #   env:
+    #     description: "deploy cluster(dev/stg/prd)"
+    #     required: true
+    #     default: "stg"
+    #   build_targets:
+    #     description: "paths to build.yaml. multiple files are separated by ','"
+    #     required: true
+
+jobs:
+  printInputs:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "env: ${{ github.event.inputs }}"
+        echo "build_targets: ${{ github.event.inputs }}"
+        echo "all: ${{ github.event.inputs }}"
