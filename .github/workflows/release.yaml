@@ -13,7 +13,7 @@ jobs:
     - name: checkout master
       uses: actions/checkout@v2
       with:
-        ref: origin/master
+        ref: master
 
     - name: fetch release
       run: |
