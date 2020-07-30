@@ -22,7 +22,7 @@ jobs:
         echo $PWD
         echo $PATH
         echo $GOPATH
-        GOBIN=$PWD/BIN go get github.com/Songmu/ghch
+        GOBIN=$PWD/bin go get github.com/Songmu/ghch
         ./bin/ghch -h
     - uses: anothrNick/github-tag-action@1.22.0
       id: tag_bump
