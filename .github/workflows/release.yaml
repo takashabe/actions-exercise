@@ -26,6 +26,7 @@ jobs:
         echo $PATH
         echo $GOPATH
         go get github.com/Songmu/ghch
+        ls -al /home/runner/go/bin
         ghch -h
     - uses: anothrNick/github-tag-action@1.22.0
       id: tag_bump
