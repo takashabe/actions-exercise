@@ -13,13 +13,15 @@ jobs:
     - name: checkout master
       uses: actions/checkout@v2
       with:
-        ref: master
+        ref: origin/master
 
     - name: fetch release
       run: |
         # checkout multiple ranch (Added master)
         # https://github.com/actions/checkout/issues/214
         git fetch --no-tags --depth=1 origin release
+        git checkout -b release
+        git checkout ${{ github.sha }}
 
     - uses: actions/setup-go@v2
       with:
