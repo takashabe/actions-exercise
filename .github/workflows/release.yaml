@@ -10,4 +10,5 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-    - uses: hmarr/debug-action@latest
+    - name: Debug Action
+      uses: hmarr/debug-action@v1.0.0
