@@ -8,7 +8,7 @@ on:
 jobs:
   release:
     if: github.event.pull_request.merged == true &&
-          startsWith(github.base_ref, 'pre_release/')
+          startsWith(github.base_ref, 'pre-release/')
     runs-on: ubuntu-latest
     steps:
     - name: Debug Action
