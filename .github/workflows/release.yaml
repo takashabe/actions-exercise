@@ -18,12 +18,15 @@ jobs:
       with:
         go-version: '^1.14.6'
     - name: test
+      working-directory: /
+      env:
+        GO111MODULE: on
       run: |
         echo $PWD
         echo $PATH
         echo $GOPATH
-        GOBIN=$PWD/bin go get github.com/Songmu/ghch
-        ./bin/ghch -h
+        go get github.com/Songmu/ghch
+        ghch -h
     - uses: anothrNick/github-tag-action@1.22.0
       id: tag_bump
       env:
