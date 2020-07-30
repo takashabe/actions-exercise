@@ -17,6 +17,9 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         go-version: '^1.14.6'
+    - run: |
+        go get github.com/Songmu/ghch
+        ghch -h
     - uses: anothrNick/github-tag-action@1.22.0
       id: tag_bump
       env:
@@ -28,6 +31,6 @@ jobs:
         echo "tags: ${{ steps.tag_bump.outputs.tag }} ${{ steps.tag_bump.outputs.new_tag }}"
         git tag ${{ steps.tag_bump.outputs.new_tag }}
         git push origin ${{ steps.tag_bump.outputs.new_tag }}
-        go get github.com/Songmu/ghch
+
         ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown
         hub pull-request -m "[release] ${{ steps.tag_bump.outputs.new_tag }}" -m $(ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown)
