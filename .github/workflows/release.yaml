@@ -4,16 +4,24 @@ on:
   pull_request:
     types:
     - closed
-  push:
-    branches:
-    - "**"
 
 jobs:
   release:
-    # if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'pre-release')
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'pre-release')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: checkout master
+      uses: actions/checkout@v2
+      with:
+        ref: master
+
+    - name: fetch release
+      run: |
+        # checkout multiple ranch (Added master)
+        # https://github.com/actions/checkout/issues/214
+        git fetch --no-tags --depth=1 origin release
+        git checkout -b release
+        git checkout ${{ github.sha }}
 
     - uses: actions/setup-go@v2
       with:
@@ -27,16 +35,21 @@ jobs:
         WITH_V: true
         DRY_RUN: true
 
+    - uses: hmarr/debug-action@v1.0.0
+
     - name: publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GO111MODULE: on
         RELEASE_BRANCH: release
       run: |
+        git --no-pager branch --list
+
         echo "tags: ${{ steps.tag_bump.outputs.tag }} ${{ steps.tag_bump.outputs.new_tag }}"
         git tag ${{ steps.tag_bump.outputs.new_tag }}
         git push origin ${{ steps.tag_bump.outputs.new_tag }}
 
         go get github.com/Songmu/ghch/cmd/ghch
-        ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown
-        hub pull-request -b $RELEASE_BRANCH -m "[release] ${{ steps.tag_bump.outputs.new_tag }}" -m $(ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown)
+        echo -e "[release] ${{ steps.tag_bump.outputs.new_tag }}\n" > _CHANGELOG
+        ghch --from $RELEASE_BRANCH --format markdown >> _CHANGELOG
+        hub pull-request --base $RELEASE_BRANCH --head master --file _CHANGELOG
