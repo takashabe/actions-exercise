@@ -16,3 +16,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEFAULT_BUMP: major
         WITH_V: true
+        DRY_RUN: true
+    - run: |
+        echo "output: $new_tag $tag"
