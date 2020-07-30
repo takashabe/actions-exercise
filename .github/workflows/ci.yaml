@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          go-versoin: '1.14.3'
+          go-versoin: '^1.14.6'
 
       - name: test
         run: |
