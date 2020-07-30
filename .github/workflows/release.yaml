@@ -10,6 +10,9 @@ jobs:
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'pre-release')
     runs-on: ubuntu-latest
     steps:
-    - run: echo ${{ github.head_ref }}
-    - name: Debug Action
-      uses: hmarr/debug-action@v1.0.0
+    - uses: actions/checkout@v2
+    - uses: anothrNick/github-tag-action@1.12.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEFAULT_BUMP: major
+        WITH_V: true
