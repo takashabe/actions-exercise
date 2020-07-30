@@ -10,13 +10,15 @@ jobs:
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'pre-release')
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v2
-
     - name: checkout release
       uses: actions/checkout@v2
       with:
         ref: release
+
+    - name: checkout master
+      uses: actions/checkout@v2
+      with:
+        ref: master
 
     - uses: actions/setup-go@v2
       with:
@@ -30,12 +32,16 @@ jobs:
         WITH_V: true
         DRY_RUN: true
 
+    - uses: hmarr/debug-action@v1.0.0
+
     - name: publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GO111MODULE: on
         RELEASE_BRANCH: release
       run: |
+        git --nopager branch --list
+
         echo "tags: ${{ steps.tag_bump.outputs.tag }} ${{ steps.tag_bump.outputs.new_tag }}"
         git tag ${{ steps.tag_bump.outputs.new_tag }}
         git push origin ${{ steps.tag_bump.outputs.new_tag }}
@@ -43,4 +49,4 @@ jobs:
         go get github.com/Songmu/ghch/cmd/ghch
         echo -e "[release] ${{ steps.tag_bump.outputs.new_tag }}\n" > _CHANGELOG
         ghch --from $RELEASE_BRANCH --format markdown >> _CHANGELOG
-        hub pull-request --base $RELEASE_BRANCH --file _CHANGELOG
+        hub pull-request --base $RELEASE_BRANCH --head master --file _CHANGELOG
