@@ -19,7 +19,7 @@ jobs:
         go-version: '^1.14.6'
     - name: test
       env:
-        # GOPATH: /home/runner/work
+        GOPATH: /home/runner/go
         GO111MODULE: on
       run: |
         echo $PWD
