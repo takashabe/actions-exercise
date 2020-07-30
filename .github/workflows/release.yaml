@@ -1,4 +1,4 @@
-name: manual
+name: release
 
 on: 
   pull_request:
@@ -12,4 +12,5 @@ jobs:
     steps:
     - run: |
         echo "merged pre-release pull-request"
-        echo "${{ github }}"
+        echo "event: ${{ github.event }}"
+        echo "workflow: ${{ github.workflow }}"
