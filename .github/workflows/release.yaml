@@ -31,6 +31,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GO111MODULE: on
+        RELEASE_BRANCH: release
       run: |
         echo "tags: ${{ steps.tag_bump.outputs.tag }} ${{ steps.tag_bump.outputs.new_tag }}"
         git tag ${{ steps.tag_bump.outputs.new_tag }}
@@ -38,4 +39,4 @@ jobs:
 
         go get github.com/Songmu/ghch/cmd/ghch
         ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown
-        hub pull-request -m "[release] ${{ steps.tag_bump.outputs.new_tag }}" -m $(ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown)
+        hub pull-request -b $RELEASE_BRANCH -m "[release] ${{ steps.tag_bump.outputs.new_tag }}" -m $(ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown)
