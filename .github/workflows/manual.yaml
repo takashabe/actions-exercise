@@ -40,4 +40,4 @@ jobs:
         git switch -c $WORKING_BRANCH origin/master
         git commit -am "buiding image"
         git push origin $WORKING_BRANCH
-        hub pull-request -m "test pr"
+        hub pull-request -m "[pre-release] ${{ github.run_id }}"
