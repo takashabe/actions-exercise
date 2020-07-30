@@ -25,10 +25,9 @@ jobs:
         echo $PWD
         echo $PATH
         echo $GOPATH
-        go get github.com/Songmu/ghch
+        go get github.com/Songmu/ghch/cmd/ghch
         ls -al /home/runner/go/bin
-        # ghch -h
-    - run: ghch -h
+        ghch -h
     - uses: anothrNick/github-tag-action@1.22.0
       id: tag_bump
       env:
@@ -45,6 +44,5 @@ jobs:
         git tag ${{ steps.tag_bump.outputs.new_tag }}
         git push origin ${{ steps.tag_bump.outputs.new_tag }}
 
-        go get github.com/Songmu/ghch
         ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown
         hub pull-request -m "[release] ${{ steps.tag_bump.outputs.new_tag }}" -m $($GOPATH/bin/ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown)
