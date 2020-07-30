@@ -10,7 +10,4 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        echo "merged pre-release pull-request"
-        echo "event: ${{ github.event }}"
-        echo "workflow: ${{ github.workflow }}"
+    - uses: hmarr/debug-action
