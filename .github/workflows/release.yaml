@@ -40,7 +40,7 @@ jobs:
         GO111MODULE: on
         RELEASE_BRANCH: release
       run: |
-        git --nopager branch --list
+        git --no-pager branch --list
 
         echo "tags: ${{ steps.tag_bump.outputs.tag }} ${{ steps.tag_bump.outputs.new_tag }}"
         git tag ${{ steps.tag_bump.outputs.new_tag }}
