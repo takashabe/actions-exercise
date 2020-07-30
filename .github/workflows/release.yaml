@@ -10,15 +10,16 @@ jobs:
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'pre-release')
     runs-on: ubuntu-latest
     steps:
-    - name: checkout release
-      uses: actions/checkout@v2
-      with:
-        ref: release
-
     - name: checkout master
       uses: actions/checkout@v2
       with:
         ref: master
+
+    - name: fetch release
+      run: |
+        # checkout multiple ranch (Added master)
+        # https://github.com/actions/checkout/issues/214
+        git fetch --no-tags --depth=1 origin release
 
     - uses: actions/setup-go@v2
       with:
