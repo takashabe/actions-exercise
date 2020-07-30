@@ -27,10 +27,14 @@ jobs:
         DEFAULT_BUMP: major
         WITH_V: true
         DRY_RUN: true
-    - run: |
+    - name: publish
+      env:
+        GOPATH: /home/runner/work
+      run: |
         echo "tags: ${{ steps.tag_bump.outputs.tag }} ${{ steps.tag_bump.outputs.new_tag }}"
         git tag ${{ steps.tag_bump.outputs.new_tag }}
         git push origin ${{ steps.tag_bump.outputs.new_tag }}
 
-        ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown
-        hub pull-request -m "[release] ${{ steps.tag_bump.outputs.new_tag }}" -m $(ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown)
+        go get github.com/Songmu/ghch
+        $GOPATH/bin/ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown
+        hub pull-request -m "[release] ${{ steps.tag_bump.outputs.new_tag }}" -m $($GOPATH/bin/ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format=markdown)
