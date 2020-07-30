@@ -7,8 +7,9 @@ on:
 
 jobs:
   release:
-    if: github.event.pull_request.merged == true && startsWith('pre-release/', github.base_ref)
+    # if: github.event.pull_request.merged == true && startsWith(github.base_ref, 'pre-release')
     runs-on: ubuntu-latest
     steps:
+    - run: echo ${{ github.base_ref }}
     - name: Debug Action
       uses: hmarr/debug-action@v1.0.0
