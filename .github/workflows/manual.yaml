@@ -22,7 +22,7 @@ jobs:
     - uses: imranismail/setup-kustomize@v1
       with:
         kustomize-version: '3.8.1'
-    - name: create pull-request
+    - name: kustomize
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -33,5 +33,9 @@ jobs:
         git config --global user.email 'bot@users.noreply.github.com'
         git switch -c pre_release/${{ github.sha }} origin/master
         git commit -am 'update images'
-        git push
-        gh pr create --title "[pre-release] ${{ github.sha }}"
+        # git push
+        # gh pr create --title "[pre-release] ${{ github.sha }}"
+    - name: create pull-request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        base: master
