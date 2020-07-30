@@ -28,6 +28,10 @@ jobs:
       run: |
         cd src/cache/deployments/overlays
         kustomize edit set image app_image=foo@${{ github.sha }}
-        git switch -c pre_release/${{ github.sha }}
+
+        git config --global user.name 'bot'
+        git config --global user.email 'bot@users.noreply.github.com'
+        git switch -c pre_release/${{ github.sha }} origin/master
         git commit -am 'update images'
+        git push
         gh pr create --title "[pre-release] ${{ github.sha }}"
