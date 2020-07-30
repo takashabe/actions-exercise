@@ -18,6 +18,7 @@ jobs:
         echo "env: ${{ github.event.inputs }}"
         echo "build_targets: ${{ github.event.inputs }}"
         echo "all: ${{ github.event.inputs }}"
+    - uses: actions/checkout@v2
     - uses: imranismail/setup-kustomize@v1
       with:
         kustomize-version: '3.8.1'
