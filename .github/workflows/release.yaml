@@ -63,11 +63,9 @@ jobs:
 
     - name: create changelog
       id: changelog
-      env:
-        GO111MODULE: on
       run: |
         go get github.com/Songmu/ghch/cmd/ghch
-        echo "::set-output name=changelog::$(ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format markdown)"
+        ghch --next-version ${{ steps.tag_bump.outputs.new_tag }} --format markdown > changelog.md
 
     - uses: actions/create-release@v1
       env:
@@ -75,6 +73,6 @@ jobs:
       with:
         tag_name: ${{ steps.tag_bump.outputs.new_tag }}
         release_name: 'Release ${{ steps.tag_bump.outputs.new_tag }}'
-        body: echo ${{ steps.changelog.outputs.changelog }}
+        body_path: ./changelog.md
         draft: false
         prerelease: false
