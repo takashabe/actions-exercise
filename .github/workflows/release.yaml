@@ -75,6 +75,6 @@ jobs:
       with:
         tag_name: ${{ steps.tag_bump.outputs.new_tag }}
         release_name: 'Release ${{ steps.tag_bump.outputs.new_tag }}'
-        body: echo ${{ steps.changelog.outputs.changelog }}
+        body: ${{ steps.changelog.outputs.changelog }}
         draft: false
         prerelease: false
