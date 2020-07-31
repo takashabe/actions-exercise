@@ -67,7 +67,7 @@ jobs:
         GO111MODULE: on
       run: |
         go get github.com/Songmu/ghch/cmd/ghch
-        echo "::set-output name=changelog::$(ghch --latest --format markdown)"
+        echo "::set-output name=changelog::$(ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format markdown)"
 
     - uses: actions/create-release@v1
       env:
