@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 images:
-- digest: 136b076683fb7c735a56b70871ac6aef02d5cc39
+- digest: 879cadf62fe977ad21e90364af71685cc45b1e15
   name: app_image
   newName: foo
 
