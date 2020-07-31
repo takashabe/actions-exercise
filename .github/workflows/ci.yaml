@@ -3,7 +3,7 @@ name: Test services
 on:
   push:
     paths:
-      - "**"
+      - "disable"
 
 jobs:
   test:
