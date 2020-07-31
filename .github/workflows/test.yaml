@@ -21,7 +21,7 @@ jobs:
         run: |
           go get github.com/Songmu/ghch/cmd/ghch
           changelog=$(ghch --latest --format markdown)
-          echo $changelog
+          echo $changelog > ch.md
 
           changelog="${changelog//'%'/'%25'}"
           changelog="${changelog//$'\n'/'%0A'}"
@@ -30,3 +30,12 @@ jobs:
           echo "::set-output name=changelog::$changelog"
 
       - run: echo "${{ steps.changelog.outputs.changelog }}"
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v20.0.0
+          release_name: 'Release v20.0.0'
+          body_path: ./ch.md
+          draft: true
+          prerelease: false
