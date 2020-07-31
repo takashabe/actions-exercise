@@ -20,16 +20,8 @@ jobs:
           GO111MODULE: on
         run: |
           go get github.com/Songmu/ghch/cmd/ghch
-          changelog=$(ghch --latest --format markdown)
-          echo $changelog > ch.md
+          ghch --latest --format markdown > ch.md
 
-          changelog="${changelog//'%'/'%25'}"
-          changelog="${changelog//$'\n'/'%0A'}"
-          changelog="${changelog//$'\r'/'%0D'}"
-
-          echo "::set-output name=changelog::$changelog"
-
-      - run: echo "${{ steps.changelog.outputs.changelog }}"
       - uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
