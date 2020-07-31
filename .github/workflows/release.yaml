@@ -34,12 +34,12 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GO111MODULE: on
-        RELEASE_BRANCH: release
+        RELEASE_BRANCH: origin/release
       run: |
         go get github.com/Songmu/ghch/cmd/ghch
         echo -e "[release] ${{ steps.tag_bump.outputs.new_tag }}\n" > _CHANGELOG
         ghch --from $RELEASE_BRANCH --format markdown >> _CHANGELOG
-        hub pull-request --base $RELEASE_BRANCH --head master --file _CHANGELOG
+        hub pull-request --base $RELEASE_BRANCH --head origin/master --file _CHANGELOG
 
   release_tag:
     if: github.event.pull_request.merged == true && github.head_ref == 'master' && github.base_ref == 'release'
