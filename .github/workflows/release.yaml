@@ -13,14 +13,7 @@ jobs:
     - name: checkout master
       uses: actions/checkout@v2
       with:
-        ref: master
-
-    - name: fetch release
-      run: |
-        # add branch. ref https://github.com/actions/checkout/issues/214
-        git fetch --no-tags --depth=1 origin release
-        git checkout -b release
-        git checkout ${{ github.sha }}
+        fetch-depth: 0
 
     - uses: actions/setup-go@v2
       with:
@@ -33,7 +26,7 @@ jobs:
         DEFAULT_BUMP: major
         WITH_V: true
         DRY_RUN: true
-        RELEASE_BRANCHES: release
+        RELEASE_BRANCHES: '*'
 
     - uses: hmarr/debug-action@v1.0.0
 
@@ -45,7 +38,7 @@ jobs:
       run: |
         go get github.com/Songmu/ghch/cmd/ghch
         echo -e "[release] ${{ steps.tag_bump.outputs.new_tag }}\n" > _CHANGELOG
-        ghch --from $RELEASE_BRANCH --format markdown >> _CHANGELOG
+        ghch --from origin/$RELEASE_BRANCH --format markdown >> _CHANGELOG
         hub pull-request --base $RELEASE_BRANCH --head master --file _CHANGELOG
 
   release_tag:
@@ -53,6 +46,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     - uses: anothrNick/github-tag-action@1.22.0
       id: tag_bump
