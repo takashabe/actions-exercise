@@ -6,7 +6,7 @@ on:
     - closed
 
 jobs:
-  release:
+  create_release_pr:
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'pre-release')
     runs-on: ubuntu-latest
     steps:
@@ -17,8 +17,7 @@ jobs:
 
     - name: fetch release
       run: |
-        # checkout multiple ranch (Added master)
-        # https://github.com/actions/checkout/issues/214
+        # add branch. ref https://github.com/actions/checkout/issues/214
         git fetch --no-tags --depth=1 origin release
         git checkout -b release
         git checkout ${{ github.sha }}
@@ -34,6 +33,7 @@ jobs:
         DEFAULT_BUMP: major
         WITH_V: true
         DRY_RUN: true
+        RELEASE_BRANCHES: release
 
     - uses: hmarr/debug-action@v1.0.0
 
@@ -43,13 +43,43 @@ jobs:
         GO111MODULE: on
         RELEASE_BRANCH: release
       run: |
-        git --no-pager branch --list
-
-        echo "tags: ${{ steps.tag_bump.outputs.tag }} ${{ steps.tag_bump.outputs.new_tag }}"
-        git tag ${{ steps.tag_bump.outputs.new_tag }}
-        git push origin ${{ steps.tag_bump.outputs.new_tag }}
-
         go get github.com/Songmu/ghch/cmd/ghch
         echo -e "[release] ${{ steps.tag_bump.outputs.new_tag }}\n" > _CHANGELOG
         ghch --from $RELEASE_BRANCH --format markdown >> _CHANGELOG
         hub pull-request --base $RELEASE_BRANCH --head master --file _CHANGELOG
+
+  release_tag:
+    if: github.event.pull_request.merged == true && github.head_ref == 'master' && github.base_ref == 'release'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: anothrNick/github-tag-action@1.22.0
+      id: tag_bump
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEFAULT_BUMP: major
+        WITH_V: true
+        RELEASE_BRANCHES: release
+
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '^1.14.6'
+
+    - name: create changelog
+      id: changelog
+      env:
+        GO111MODULE: on
+      run: |
+        go get github.com/Songmu/ghch/cmd/ghch
+        echo "::set-output name=changelog::$(ghch --next-version=${{ steps.tag_bump.outputs.new_tag }} --format markdown)"
+
+    - uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag_bump.outputs.new_tag }}
+        release_name: 'Release ${{ steps.tag_bump.outputs.new_tag }}'
+        body: echo ${{ steps.changelog.outputs.changelog }}
+        draft: false
+        prerelease: false
