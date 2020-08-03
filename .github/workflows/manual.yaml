@@ -15,8 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-        targets=${{ github.event.inputs.build_targets }}
-        IFS=,
+        targets=$(echo ${{ github.event.inputs.build_targets }} | tr ',' ' ')
         for t in targets
         do
           echo "build_target: $t\n"
