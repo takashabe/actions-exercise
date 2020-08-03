@@ -16,7 +16,7 @@ jobs:
     steps:
     - run: |
         targets=$(echo ${{ github.event.inputs.build_targets }} | tr ',' ' ')
-        for t in targets
+        for t in $targets
         do
           echo "build_target: $t\n"
         done
