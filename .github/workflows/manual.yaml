@@ -15,6 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
+        for t in ${{ github.event.inputs.build_targets }}
+        do
+          echo "build_target: $t\n"
+        done
+
+    - run: |
         echo "env: ${{ github.event.inputs }}"
         echo "build_targets: ${{ github.event.inputs }}"
         echo "all: ${{ github.event.inputs }}"
