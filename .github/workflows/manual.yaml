@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-        # targets=$(echo ${{ github.event.inputs.build_targets }} | tr ',' ' ')
         targets=${{ github.event.inputs.build_targets }}
         IFS=','
         for t in $targets
         do
-          echo "build_target: $t\n"
+          echo "build_target: $t"
         done
+      name: debug
 
     - run: |
         echo "env: ${{ github.event.inputs }}"
