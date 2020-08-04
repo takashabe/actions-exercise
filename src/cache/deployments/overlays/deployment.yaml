@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: app_image
+          image: takashabe/edge-exporter-example
           env:
           - name: "overlays"
             value: "true"
