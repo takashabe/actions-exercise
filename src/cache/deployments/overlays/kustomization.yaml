@@ -6,7 +6,6 @@ images:
   name: takashabe/edge-exporter-example
   newName: takashabe/edge-exporter-example
 
-
 patchesStrategicMerge:
 - deployment.yaml
 resources:
