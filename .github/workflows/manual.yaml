@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       flag:
-        description: "deploy cluster(dev/stg/prd)"
+        description: "workflow_dispatch flag"
         required: true
         default: "true"
 
@@ -17,6 +17,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-        echo "env: ${{ github.event.inputs }}"
-        echo "build_targets: ${{ github.event.inputs }}"
         echo "all: ${{ github.event.inputs }}"
+        echo "test"
