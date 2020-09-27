@@ -6,16 +6,14 @@ on:
     - closed
   workflow_dispatch:
     inputs:
-      env:
+      flag:
         description: "deploy cluster(dev/stg/prd)"
-        required:  false
-      build_targets:
-        description: "paths to build.yaml. multiple files are separated by ','"
-        required:  false
+        required: true
+        default: "true"
 
 jobs:
   manual-test:
-    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'multi-test')
+    if: (github.event.pull_request.merged == true && startsWith(github.head_ref, 'multi-test')) || github.event.inputs.flag == "true"
     runs-on: ubuntu-latest
     steps:
     - run: |
