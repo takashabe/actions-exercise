@@ -18,3 +18,4 @@ jobs:
     steps:
     - run: |
         echo "all: ${{ github.event.inputs }}"
+        echo "test"
