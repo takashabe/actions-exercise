@@ -19,7 +19,7 @@ jobs:
       run: |
         echo $VARS
         # echo "::set-output name=matrix::{\"include\":[\"build\":\"a\",\"build\":\"b\"]}"
-        echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
+        echo "::set-output name=matrix::{\"include\":[{\"p\":\"foo\",\"config\":\"Debug\"},{\"p\":\"bar\",\"config\":\"Release\"}]}"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   job2:
