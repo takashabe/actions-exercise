@@ -26,9 +26,9 @@ jobs:
           content+="\"$t\"},"
         done
         content=${content%,}
-        printf 'matrix::{"include":[%s]}' $content
 
-        echo "::set-output name=$(printf 'matrix::{\"include\":[%s]}' $content)"
+        # echo "::set-output name=$(printf 'matrix::{\"include\":[%s]}' $content)"
+        echo "::set-output name=matrix::{\"include\":[{\"config\":\"a\"},{\"config\":\"b\"},{\"config\":\"c\"}]}"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   job2:
