@@ -15,7 +15,8 @@ jobs:
     steps:
     - id: set-matrix
       env:
-        VARS: ${{ github.event.inputs.vars }}
+        # VARS: ${{ github.event.inputs.vars }}
+        VARS: "a,b,c"
       run: |
         echo $VARS
 
@@ -27,8 +28,8 @@ jobs:
         done
         content=${content%,}
 
-        # echo "::set-output name=$(printf 'matrix::{\"include\":[%s]}' $content)"
-        echo "::set-output name=matrix::{\"include\":[{\"config\":\"a\"},{\"config\":\"b\"},{\"config\":\"c\"}]}"
+        printf "::set-output name='matrix::{\"include\":[%s]}'" $content"
+        # echo "::set-output name=matrix::{\"include\":[{\"config\":\"a\"},{\"config\":\"b\"},{\"config\":\"c\"}]}"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   job2:
