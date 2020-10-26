@@ -28,7 +28,7 @@ jobs:
         git status
         git add .
         git commit -m "[build] ${{ matrix.item }}"
-        git push origin $WORKING_BRANCH
+        ./hack/retryable-push.sh $WORKING_BRANCH
   pull-request:
     needs: build
     runs-on: ubuntu-latest
