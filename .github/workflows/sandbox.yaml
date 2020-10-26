@@ -13,33 +13,13 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
-    - id: set-matrix
-      env:
-        # VARS: ${{ github.event.inputs.vars }}
-        VARS: "a,b,c"
-      run: |
-        echo $VARS
-
-        header='{"config":'
-        content=''
-        for t in $(echo $VARS | tr ',' ' '); do
-          content+=$header
-          content+="\"$t\"},"
-        done
-        content=${content%,}
-
-        printf "::set-output name=matrix::{\"include\":[%s]}" $content
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    - uses: actions/checkout@v2
+    - run: |
+        touch $(date '+%s')
+        git status
   job2:
     needs: job1
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
     steps:
-    - name: debug
-      env:
-        context: ${{ toJson(matrix) }}
-      run: |
-        echo ${{ matrix.config }}
-        echo $context
+    - run: |
+        git status
