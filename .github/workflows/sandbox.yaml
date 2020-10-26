@@ -26,7 +26,7 @@ jobs:
         git switch -c $WORKING_BRANCH origin/master
         touch "${{ matrix.item }}-$(date '+%s')"
         git status
-        git commit add .
+        git add .
         git commit -m "[build] ${{ matrix.item }}"
         git push origin $WORKING_BRANCH
   pull-request:
