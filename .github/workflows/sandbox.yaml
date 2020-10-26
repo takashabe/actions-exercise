@@ -28,7 +28,7 @@ jobs:
         done
         content=${content%,}
 
-        printf "::set-output name='matrix::{\"include\":[%s]}'" $content
+        printf "::set-output name=matrix::{\"include\":[%s]}" $content
         # echo "::set-output name=matrix::{\"include\":[{\"config\":\"a\"},{\"config\":\"b\"},{\"config\":\"c\"}]}"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
