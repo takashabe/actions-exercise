@@ -26,9 +26,13 @@ jobs:
     steps:
     - run: |
         echo ${{ matrix.item }}
+    outputs:
+      key: ${{ matrix.item }}
   job3:
     needs: job2
     runs-on: ubuntu-latest
     steps:
     - run: |
         echo "finish"
+        echo ${{ toJson(needs.job2.outputs) }}
+        echo ${{ needs.job2.outputs }}
