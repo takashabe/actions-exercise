@@ -6,6 +6,8 @@ branch=$1
 
 max=3
 for i in {1..$max}; do
+  echo "[retryable-push.sh] trying $i"
+
   git push origin $branch
   if [ $? == 0 ]; then
     exit 0
