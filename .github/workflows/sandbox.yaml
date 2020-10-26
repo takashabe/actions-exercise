@@ -19,7 +19,7 @@ jobs:
       run: |
         echo $VARS
 
-        header='{"target":'
+        header='{"config":'
         content=''
         for t in $(echo $VARS | tr ',' ' '); do
           content+=$header
