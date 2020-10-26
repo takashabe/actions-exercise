@@ -19,7 +19,16 @@ jobs:
         git status
   job2:
     needs: job1
+    strategy:
+      matrix:
+        item: [a,b,c]
     runs-on: ubuntu-latest
     steps:
     - run: |
-        git status
+        echo ${{ matrix.item }}
+  job3:
+    needs: job2
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "finish"
