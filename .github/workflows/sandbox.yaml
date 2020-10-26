@@ -15,7 +15,7 @@ jobs:
     steps:
     - id: set-matrix
       env:
-        VARS: ${{ github.event.inputs.env }}
+        VARS: ${{ github.event.inputs.vars }}
       run: |
         echo $VARS
 
