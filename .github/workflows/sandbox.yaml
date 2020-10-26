@@ -18,7 +18,7 @@ jobs:
         VARS: ${{ github.event.inputs.env }}
       run: |
         echo $VARS
-        echo "::set-output name=matrix::{\"include\":[\"a\", \"b\"]}"
+        echo "::set-output name=matrix::{\"include\":[\"build\":\"a\",\"build\":\"b\"]}"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   job2:
