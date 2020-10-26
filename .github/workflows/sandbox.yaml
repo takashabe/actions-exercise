@@ -24,6 +24,7 @@ jobs:
       run: |
         git config --global user.name "Github Actions"
         git switch -c $WORKING_BRANCH origin/master
+        touch "${{ matrix.item }}-$(date '+%s')"
         git commit -am "[build] ${{ matrix.item }}"
         git push origin $WORKING_BRANCH
   pull-request:
