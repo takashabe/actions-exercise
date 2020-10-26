@@ -1,43 +1,30 @@
-name: Test services
+name: sandbox
 
 on:
   push:
-    paths:
-      - "disable"
+  workflow_dispatch:
+    inputs:
+      vars:
+        description: ''
+        required: false
+        default: 'a,b,c'
 
 jobs:
-  test:
+  job1:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: checkout master branch
-        if: github.ref != 'refs/heads/master'
-        run: |
-          # checkout multiple ranch (Added master)
-          # https://github.com/actions/checkout/issues/214
-          git fetch --no-tags --depth=1 origin master
-          git checkout -b master
-          git checkout ${{ github.event.pull_request.head.sha }}
-
-      - name: service changed discovery
-        run: |
-          CHANGES=$(git diff origin/master --name-only | grep / | awk 'BEGIN {FS="/"} {print $1"/"$2}' | uniq)
-          echo "::set-env name=CHANGES::$(echo $CHANGES)"
-
-      - uses: actions/setup-go@v2
-        with:
-          go-versoin: '^1.14.6'
-
-      - name: test
-        run: |
-          for c in $CHANGES
-          do
-            for target in $(find $c -type f -name go.mod -printf '%h\n')
-            do
-              cd $target
-              echo "Exec test for $target..."
-              go test 
-              cd -
-            done
-          done
+    - name: matrix
+      env:
+        VARS: ${{ github.event.inputs.env }}
+      run: |
+        echo $VARS
+        echo "::set-output name=matrix::{[\"a\", \"b\"]}"
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
+    steps:
+    - name: debug
+      run: |
+        echo ${{ toJson(matrix) }}
