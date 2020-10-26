@@ -41,5 +41,5 @@ jobs:
       env:
         context: ${{ toJson(matrix) }}
       run: |
-        ecoh ${{ matrix.config }}
+        echo ${{ matrix.config }}
         echo $context
