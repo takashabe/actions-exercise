@@ -26,6 +26,7 @@ jobs:
           content+="\"$t\"},"
         done
         content=${content%,}
+        printf 'matrix::{"include":[%s]}' $content
 
         echo "::set-output name=$(printf 'matrix::{\"include\":[%s]}' $content)"
     outputs:
