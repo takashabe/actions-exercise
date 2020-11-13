@@ -19,6 +19,7 @@ jobs:
 
         result=$(curl -H "Authorization: token ${GITHUB_TOKEN}" $url)
 
+        echo $(${result} | jq '.head.ref' | sed 's/\"//g')
         echo "::set-output name=branch::$(${result} | jq '.head.ref' | sed 's/\"//g')"
         # echo "::set-output name=pr_number::$($result | jq '.number')"
     - name: print
