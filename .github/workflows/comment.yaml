@@ -15,8 +15,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         echo "::set-output name=branchname::$(curl -H "Authorization: token ${GITHUB_TOKEN}" ${{ github.event.issue.pull_request.url }} | jq '.head.ref' | sed 's/\"//g')"
-
     - name: Checkout upstream repo
       uses: actions/checkout@v2
       with:
         ref: ${{ steps.upstreambranch.outputs.branchname }}
+    - name: print
+      run: |
+        echo ${{ steps.upstreambranch.outputs.branchname }}
+        echo ${{ github.event.path }}
+        echo $(cat ${{ github.event.path }} | jq '.number')
