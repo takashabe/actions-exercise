@@ -7,7 +7,7 @@ on:
 
 jobs:
   job:
-    if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/preview')
+    # if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/preview')
     runs-on: ubuntu-latest
     steps:
     - name: get upstream branch
