@@ -16,15 +16,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         url="https://api.github.com/repos/takashabe/actions-exercise/pulls/88"
+
         result=$(curl -H "Authorization: token ${GITHUB_TOKEN}" $url)
-        echo $result
-        echo $result | jq '.head.ref' | sed 's/\"//g')"
-    - name: Checkout upstream repo
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ steps.upstreambranch.outputs.branchname }}
+
+        echo "::set-output name=branch::$($result | jq '.head.ref' | sed 's/\"//g')"
+        # echo "::set-output name=pr_number::$($result | jq '.number')"
     - name: print
       run: |
-        echo ${{ steps.upstreambranch.outputs.branchname }}
-        echo ${{ github.event.path }}
-        echo $(cat ${{ github.event.path }} | jq '.number')
+        echo ${{ steps.upstreambranch.outputs.branch }}
+        # echo ${{ steps.upstreambranch.outputs.pr_number }}
