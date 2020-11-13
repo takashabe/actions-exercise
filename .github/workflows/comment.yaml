@@ -3,6 +3,7 @@ name: Call from issue-comment
 on:
   issue_comment:
     types: [created]
+  push:
 
 jobs:
   job:
@@ -14,7 +15,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo "::set-output name=branchname::$(curl -H "Authorization: token ${GITHUB_TOKEN}" ${{ github.event.issue.pull_request.url }} | jq '.head.ref' | sed 's/\"//g')"
+        url="https://api.github.com/repos/takashabe/actions-exercise/pulls/88"
+        result=$(curl -H "Authorization: token ${GITHUB_TOKEN}" $url)
+        echo $result
+        echo $result | jq '.head.ref' | sed 's/\"//g')"
     - name: Checkout upstream repo
       uses: actions/checkout@v2
       with:
