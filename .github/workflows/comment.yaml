@@ -6,7 +6,7 @@ on:
 
 jobs:
   job:
-    # if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/preview')
+    if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/preview')
     runs-on: ubuntu-latest
     steps:
     - name: get upstream branch
@@ -20,8 +20,8 @@ jobs:
 
         echo $(echo $result | jq '.head.ref' | sed 's/\"//g')
         echo "::set-output name=branch::$(echo $result | jq '.head.ref' | sed 's/\"//g')"
-        # echo "::set-output name=pr_number::$($result | jq '.number')"
+        echo "::set-output name=pr_number::$(echo $result | jq '.number')"
     - name: print
       run: |
         echo ${{ steps.upstreambranch.outputs.branch }}
-        # echo ${{ steps.upstreambranch.outputs.pr_number }}
+        echo ${{ steps.upstreambranch.outputs.pr_number }}
