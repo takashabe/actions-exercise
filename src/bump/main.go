@@ -21,7 +21,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	_, err = repo.CreateTag("src/git/v0.0.2", h.Hash(), &git.CreateTagOptions{
+	_, err = repo.CreateTag("src/bump/v0.0.2", h.Hash(), &git.CreateTagOptions{
 		Message: "test",
 	})
 	if err != nil {
