@@ -9,6 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - id: setup
       run: |
         user_list=$(cat hack/retryable-push.sh | grep -Ev '^$')
