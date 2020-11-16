@@ -14,8 +14,8 @@ jobs:
       run: |
         user_list=$(cat hack/retryable-push.sh | grep -Ev '^$')
         user_list="${user_list//$'\n'/\\n}"
-        echo ${{ context.repo.owner }}
-        echo ${{ context.repo.repo }}
+        # echo ${{ context.repo.owner }}
+        # echo ${{ context.repo.repo }}
         echo $user_list
         echo "::set-output name=user_list::$user_list"
     - uses: actions/github-script@v3
