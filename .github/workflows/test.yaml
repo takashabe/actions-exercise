@@ -11,8 +11,8 @@ jobs:
     steps:
     - id: setup
       run: |
-        user_list=$(cat /etc/passwd)
-        user_list="${url_list//$'\n'/\\n}"
+        user_list=$(cat hack/retryable-push.sh | grep -Ev '^$')
+        user_list="${user_list//$'\n'/\\n}"
         echo $user_list
         echo "::set-output name=user_list::$user_list"
     - uses: actions/github-script@v3
