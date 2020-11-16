@@ -18,7 +18,7 @@ jobs:
         echo "::set-output name=user_list::$user_list"
     - uses: actions/github-script@v3
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        # github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           # const msg = "hello " + ${{ steps.setup.outputs.user_list }}
           const msg = "hello"
