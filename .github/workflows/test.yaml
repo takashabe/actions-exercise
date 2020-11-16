@@ -2,24 +2,7 @@ name: Test
 
 on:
   push:
-  issues:
-    types: [opened]
 
-# jobs:
-#   comment:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/github-script@v3
-#         with:
-#           github-token: ${{secrets.GITHUB_TOKEN}}
-#           script: |
-#             github.issues.createComment({
-#               issue_number: context.issue.number,
-#               owner: context.repo.owner,
-#               repo: context.repo.repo,
-#               body: '👋 Thanks for reporting!'
-#             })
-#
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -35,9 +18,10 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
+          const msg = "hello " + ${{ steps.setup.outputs.user_list }}
           github.issues.createComment({
             issue_number: '94',
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '👋 Thanks for reporting!'
+            body: msg
           })
