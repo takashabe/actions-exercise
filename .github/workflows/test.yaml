@@ -8,22 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - id: setup
-      run: |
-        user_list=$(cat hack/retryable-push.sh | grep -Ev '^$')
-        user_list="${user_list//$'\n'/\\n}"
-        echo $user_list
-        echo "::set-output name=user_list::$user_list"
-    - uses: actions/github-script@v3
-      env: 
-        USER_LIST: ${{ steps.setup.outputs.user_list }}
       with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          const msg = `hello ${{ steps.setup.outputs.user_list }}`
-          github.issues.createComment({
-            issue_number: '94',
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: msg
-          })
+        depth: 0
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '^1.15' 
+    - name: bump
+      run: |
+        go install github.com/x-motemen/gobump/cmd/gobump
