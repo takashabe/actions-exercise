@@ -20,7 +20,8 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          const msg = "hello " + ${{ steps.setup.outputs.user_list }}
+          # const msg = "hello " + ${{ steps.setup.outputs.user_list }}
+          const msg = "hello"
           github.issues.createComment({
             issue_number: 94,
             owner: context.repo.owner,
