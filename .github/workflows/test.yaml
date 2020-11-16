@@ -2,36 +2,27 @@ name: Test
 
 on: 
   push:
-    branches:
-    - main
+    # branches:
+    # - main
 
 jobs:
   test:
-    if: 'false' 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '^1.14.6'
-
-      - name: create changelog
-        id: changelog
-        env:
-          GO111MODULE: on
-        run: |
-          go get github.com/Songmu/ghch/cmd/ghch
-          ghch --latest --format markdown > ch.md
-
-      - uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v20.0.0
-          release_name: 'Release v20.0.0'
-          body_path: ./ch.md
-          draft: true
-          prerelease: false
+    - id: setup
+      run: |
+        user_list=$(cat /etc/passwd)
+        user_list="${url_list//$'\n'/\\n}"
+        echo $user_list
+        echo "::set-output name=user_list::$user_list"
+    - uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          const msg = "hello " + ${{ steps.setup.outputs.user_list}}
+          github.issues.createComment({
+            issue_number: 94,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: msg,
+          })
