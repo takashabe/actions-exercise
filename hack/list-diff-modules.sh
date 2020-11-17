@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -uo pipefail
+set -o pipefail
 
 modules=$(find . -type f -name "go.mod")
 echo $modules
