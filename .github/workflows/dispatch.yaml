@@ -11,5 +11,5 @@ jobs:
       with:
         repo: takashabe/actions-exercise2
         workflow: workflow_dispatch
-        token: ${{ secrets.TOKEN }}
+        token: ${{ secrets.WORKFLOW_TOKEN }}
         inputs: '{ "api1":"api1_from_dispatch", "api2":"api2_from_dispatch" }'
