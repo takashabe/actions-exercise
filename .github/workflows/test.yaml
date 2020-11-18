@@ -1,4 +1,4 @@
-name: Test
+name: test
 
 on:
   push:
@@ -6,8 +6,19 @@ on:
     - '*'
 
 jobs:
-  test:
+  job:
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        echo "hello"
+    - uses: actions/checkout@v2
+    - name: build_preview
+      env:
+        WORKING_BRANCH: 'preview/${{ github.run_id }}'
+      run: |
+        touch ${{ github.run_id }}
+
+        git config --global user.name "Github Actions"
+        git switch -c $WORKING_BRANCH ${{ github.ref }}
+        git commit -am "[preview] ${{ github.run_id }}"
+        git push origin $WORKING_BRANCH
+
+        gh pr create --title "preview ${{ github.run_id }}" --base master --head $WORKING_BRANCH --draft
