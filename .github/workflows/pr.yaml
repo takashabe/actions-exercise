@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        depth: 0
+        fetch-depth: 0
     - name: print
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
