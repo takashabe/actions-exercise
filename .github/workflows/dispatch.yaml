@@ -1,0 +1,15 @@
+name: call_another_workflow
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: benc-uk/workflow-dispatch@v1
+      with:
+        repo: takashabe/actions-exercise2
+        workflow: workflow_dispatch
+        token: ${{ secrets.TOKEN }}
+        inputs: '{ "api1":"api1_from_dispatch", "api2":"api2_from_dispatch" }'
