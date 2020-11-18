@@ -13,6 +13,7 @@ jobs:
     - name: build_preview
       env:
         WORKING_BRANCH: 'preview/${{ github.run_id }}'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         touch ${{ github.run_id }}
 
