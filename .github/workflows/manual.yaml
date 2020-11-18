@@ -1,21 +1,19 @@
-name: manual
+name: pull_request_close
 
 on: 
   pull_request:
     types:
     - closed
-  workflow_dispatch:
-    inputs:
-      flag:
-        description: "workflow_dispatch flag"
-        required: true
-        default: "true"
 
 jobs:
   manual-test:
     if: (github.event.pull_request.merged == true && startsWith(github.head_ref, 'multi-test')) || github.event.inputs.flag == 'true'
+
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        echo "all: ${{ github.event.inputs }}"
-        echo "test"
+    - name: print
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        result=$(curl -H "Authorization: token ${GITHUB_TOKEN}" ${{ github.event.issue.pull_request.url }})
+        echo $result
