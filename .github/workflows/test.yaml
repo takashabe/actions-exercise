@@ -23,4 +23,4 @@ jobs:
         git commit -am "[preview] ${{ github.run_id }}"
         git push origin $WORKING_BRANCH
 
-        gh pr create --title "preview ${{ github.run_id }}" --base master --head $WORKING_BRANCH --draft
+        gh pr create --title "preview ${{ github.run_id }}" --body "preview pr" --base master --head $WORKING_BRANCH --draft
