@@ -19,4 +19,4 @@ jobs:
         result=$(curl -H "Authorization: token ${GITHUB_TOKEN}" ${{ github.event.pull_request.url }})
         echo $result
 
-        echo $(git diff $(echo $result | jq '.head.sha' | sed 's/\"//g') --name-only)
+        echo $(git diff $(echo $result | jq '.base.sha' | sed 's/\"//g') --name-only)
