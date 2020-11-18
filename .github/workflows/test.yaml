@@ -16,6 +16,7 @@ jobs:
       run: |
         touch ${{ github.run_id }}
 
+        git add .
         git config --global user.name "Github Actions"
         git switch -c $WORKING_BRANCH ${{ github.ref }}
         git commit -am "[preview] ${{ github.run_id }}"
