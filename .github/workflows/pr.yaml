@@ -7,8 +7,6 @@ on:
 
 jobs:
   manual-test:
-    if: (github.event.pull_request.merged == true && startsWith(github.head_ref, 'multi-test')) || github.event.inputs.flag == 'true'
-
     runs-on: ubuntu-latest
     steps:
     - name: print
