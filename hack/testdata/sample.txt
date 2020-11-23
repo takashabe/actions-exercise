@@ -1,0 +1,4 @@
+https://foo-bar.example.com
+https://foo1-bar.example.com
+https://bar-foo.example.com
+https://bar-1foo.example.com
