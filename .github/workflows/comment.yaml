@@ -23,5 +23,6 @@ jobs:
         echo "::set-output name=pr_number::$(echo $result | jq '.number')"
     - name: print
       run: |
+        echo ${{ github.event.comment.body }}
         echo ${{ steps.upstreambranch.outputs.branch }}
         echo ${{ steps.upstreambranch.outputs.pr_number }}
