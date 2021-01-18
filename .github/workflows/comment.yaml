@@ -43,14 +43,13 @@ jobs:
         echo "::set-output name=out::$result"
     - name: apply success message
       uses: actions/github-script@v3
-      env:
-        out: "outputs:\n${{ steps.apply.outputs.out }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          const msg = `## outputs:\n${{ steps.apply.outputs.out }}`
           github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: process.env.out
+            body: msg
           })
