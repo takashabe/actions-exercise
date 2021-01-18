@@ -39,7 +39,7 @@ jobs:
       id: apply
       run: |
         echo "hello!!!"
-    - name: plan success message
+    - name: apply success message
       uses: actions/github-script@v3
       env:
         STDOUT: "```${{ steps.apply.outputs.stdout }}```"
