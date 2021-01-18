@@ -36,14 +36,14 @@ jobs:
     #   if: ${{ steps.upstreambranch.outputs.env == 'prd' }}
     #   run: |
     #     echo "hello prd"
-    - name: apply
-      id: apply
-      run: |
-        ls -al
+    - name: Plan
+      id: plan
+      run: terraform plan -no-color
+      continue-on-error: true
     - name: apply success message
       uses: actions/github-script@v3
       env:
-        STDOUT: "```${{ steps.apply.outputs.stdout }}```"
+        STDOUT: "```${{ steps.plan.outputs.stdout }}```"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
