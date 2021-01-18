@@ -21,8 +21,15 @@ jobs:
         echo $(echo $result | jq '.head.ref' | sed 's/\"//g')
         echo "::set-output name=branch::$(echo $result | jq '.head.ref' | sed 's/\"//g')"
         echo "::set-output name=pr_number::$(echo $result | jq '.number')"
+        echo "::set-output name=env::$(echo ${{ github.event.comment.body }} | sed -e 's/\/preview env=\(.*\)/\1/')"
     - name: print
       run: |
-        echo ${{ github.event.comment.body }}
         echo ${{ steps.upstreambranch.outputs.branch }}
         echo ${{ steps.upstreambranch.outputs.pr_number }}
+        echo ${{ steps.upstreambranch.outputs.env }}
+    - name: dev
+      if: ${{ steps.upstreambranch.outputs.env == 'dev' }}
+      run: echo "hello dev"
+    - name: prd
+      if: ${{ steps.upstreambranch.outputs.env == 'prd' }}
+      run: echo "hello prd"
