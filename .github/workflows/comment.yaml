@@ -43,7 +43,7 @@ jobs:
     - name: apply success message
       uses: actions/github-script@v3
       env:
-        STDOUT: "outputs\n: ${{ steps.plan.outputs.stdout }}"
+        STDOUT: "stderr: ${{ steps.plan.outputs.stderr }}\nstdout: ${{ steps.plan.outputs.stdout }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
