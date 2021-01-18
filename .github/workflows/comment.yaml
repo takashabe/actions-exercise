@@ -39,8 +39,8 @@ jobs:
     - name: apply
       id: apply
       run: |
-        ls -al | tee apply.log
-        out="${$(echo apply.log)//$'\n'/\\n}"
+        result=$(ls -al)
+        out="${result//$'\n'/\\n}"
         echo "::set-output name=out::$out"
     - name: apply success message
       uses: actions/github-script@v3
