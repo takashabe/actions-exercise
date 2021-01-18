@@ -40,7 +40,8 @@ jobs:
       id: apply
       run: |
         result=$(ls -al)
-        echo "::set-output name=out::$result"
+        out="${result//$'\n'/\\n}"
+        echo "::set-output name=out::$out"
     - name: apply success message
       uses: actions/github-script@v3
       with:
