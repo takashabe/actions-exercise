@@ -40,12 +40,11 @@ jobs:
       id: apply
       run: |
         result=$(ls -al)
-        out="${result//$'\n'/\\n}"
-        echo "::set-output name=out::$out"
+        echo "::set-output name=out::$result"
     - name: apply success message
       uses: actions/github-script@v3
       env:
-        out: ${{ steps.apply.outputs.out }}
+        out: "outputs:\n${{ steps.apply.outputs.out }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
