@@ -29,7 +29,26 @@ jobs:
         echo ${{ steps.upstreambranch.outputs.env }}
     - name: dev
       if: ${{ steps.upstreambranch.outputs.env == 'dev' }}
-      run: echo "hello dev"
+      run: |
+        echo "hello dev"
     - name: prd
       if: ${{ steps.upstreambranch.outputs.env == 'prd' }}
-      run: echo "hello prd"
+      run: |
+        echo "hello prd"
+    - name: apply
+      id: apply
+      run: |
+        echo "hello!!!"
+    - name: plan success message
+      uses: actions/github-script@v3
+      env:
+        STDOUT: "```${{ steps.plan.outputs.stdout }}```"
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: "output:\n" + process.env.STDOUT
+          })
