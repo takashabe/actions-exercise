@@ -38,7 +38,7 @@ jobs:
     - name: apply
       id: apply
       run: |
-        echo "hello!!!"
+        echo "hello!!!" >&1
     - name: apply success message
       uses: actions/github-script@v3
       env:
