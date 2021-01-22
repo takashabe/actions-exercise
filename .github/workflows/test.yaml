@@ -22,11 +22,11 @@ jobs:
       run: echo "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
     - uses: actions/github-script@v3
       env:
-        PATH: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+        JOB_URL: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const msg = `${process.env.PATH}`
+          const msg = `${process.env.JOB_URL}`
           github.issues.createComment({
             issue_number: '112',
             owner: context.repo.owner,
