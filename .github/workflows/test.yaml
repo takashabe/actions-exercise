@@ -18,3 +18,5 @@ jobs:
         which firebase
         echo $GITHUB_PATH
         firebase --version
+    - name: print
+      run: echo "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
