@@ -1,17 +1,20 @@
 name: test
 
 on:
-  pull_request:
-    types:
-    - closed
+  push:
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: print
+    - name: test
+      continue-on-error: true
       run: |
-        echo "PR_NUMBER ${{ github.event.pull_request.number }}"
+        yarn global add firebase-tools
+        echo "$(yarn global bin)" >> $GITHUB_PATH
+        which firebase
+    - name: a
+      run: |
+        which firebase
+        echo $GITHUB_PATH
+        firebase --version
