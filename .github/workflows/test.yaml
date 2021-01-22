@@ -21,8 +21,6 @@ jobs:
     - name: print
       run: echo "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
     - uses: actions/github-script@v3
-      env:
-        JOB_URL: ${{ $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
