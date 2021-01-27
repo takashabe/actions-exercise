@@ -2,32 +2,20 @@ name: test
 
 on:
   push:
+    branches:
+      - 'pre-release/*'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: test
-      continue-on-error: true
-      run: |
-        yarn global add firebase-tools
-        echo "$(yarn global bin)" >> $GITHUB_PATH
-        which firebase
-    - name: a
-      run: |
-        which firebase
-        echo $GITHUB_PATH
-        firebase --version
-    - name: print
-      run: echo "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-    - uses: actions/github-script@v3
+    - uses: actions/checkout@v2
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const msg = `JOB_URL: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
-          github.issues.createComment({
-            issue_number: '112',
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: msg
-          })
+        fetch-depth: 0
+    - uses: anothrNick/github-tag-action@1.22.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEFAULT_BUMP: minor
+        WITH_V: true
+        DRY_RUN: true
+        RELEASE_BRANCHES: 'pre-release'
