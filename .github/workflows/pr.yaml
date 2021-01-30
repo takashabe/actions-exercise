@@ -1,0 +1,22 @@
+name: pull_request_close
+
+on: 
+  pull_request:
+    types:
+    - closed
+
+jobs:
+  manual-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: print
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        result=$(curl -H "Authorization: token ${GITHUB_TOKEN}" ${{ github.event.pull_request.url }})
+        echo $result
+
+        echo $(git diff $(echo $result | jq '.base.sha' | sed 's/\"//g') --name-only)

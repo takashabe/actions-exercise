@@ -1,34 +1,63 @@
-name: Test
+name: test
 
-on: [push]
+on:
+  push:
 
 jobs:
-  test:
-    if: 'false' 
+  setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: create pre-release branch
+      env:
+        PRE_RELEASE_BRANCH: 'pre-release'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        set +e
+        out=$(git branch -a | grep "remotes/origin/$PRE_RELEASE_BRANCH$")
+        if [ $? -eq 0 ]; then
+          # 既に作成済みであればスキップ
+          echo "skip create pre-release branch"
+          exit 0
+        fi
+        set -e
 
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '^1.14.6'
+        git config --global user.name "Github Actions"
+        git switch -c $PRE_RELEASE_BRANCH ${{ github.ref }}
 
-      - name: create changelog
-        id: changelog
-        env:
-          GO111MODULE: on
-        run: |
-          go get github.com/Songmu/ghch/cmd/ghch
-          ghch --latest --format markdown > ch.md
-
-      - uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v20.0.0
-          release_name: 'Release v20.0.0'
-          body_path: ./ch.md
-          draft: true
-          prerelease: false
+        dateVer=$(date '+%Y%m%d-%H%M%S')
+        git push origin $PRE_RELEASE_BRANCH
+        hub pull-request -m "[pre-release] $(date '+%Y%m%d-%H%M%S')" -b release
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        files: [a, b, c]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: 'pre-release'
+    - name: build commit
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BUILD_BRANCH: 'build/${{ github.run_id }}'
+      run: |
+        git config --global user.name "Github Actions"
+        git switch -c $BUILD_BRANCH origin/$PRE_RELEASE_BRANCH
+        git commit -am "[build] ${{ matrix.files }}"
+        ./hack/retryable-gitpush.sh $BUILD_BRANCH
+  generate-pull-request:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: build/${{ github.run_id }} # refernce: BUILD_BRANCH
+    - name: create pull-request
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PRE_RELEASE_BRANCH: 'pre-release'
+      run: hub pull-request -m "[build] $(date '+%Y%m%d-%H%M%S')" -b $PRE_RELEASE_BRANCH

@@ -1,0 +1,55 @@
+name: Call from issue-comment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  job:
+    # if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/preview')
+    runs-on: ubuntu-latest
+    steps:
+    # - name: get upstream branch
+    #   id: upstreambranch
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   run: |
+    #     url="https://api.github.com/repos/takashabe/actions-exercise/pulls/88"
+    #
+    #     result=$(curl -H "Authorization: token ${GITHUB_TOKEN}" $url)
+    #
+    #     echo $(echo $result | jq '.head.ref' | sed 's/\"//g')
+    #     echo "::set-output name=branch::$(echo $result | jq '.head.ref' | sed 's/\"//g')"
+    #     echo "::set-output name=pr_number::$(echo $result | jq '.number')"
+    #     echo "::set-output name=env::$(echo ${{ github.event.comment.body }} | sed -e 's/\/preview env=\(.*\)/\1/')"
+    # - name: print
+    #   run: |
+    #     echo ${{ steps.upstreambranch.outputs.branch }}
+    #     echo ${{ steps.upstreambranch.outputs.pr_number }}
+    #     echo ${{ steps.upstreambranch.outputs.env }}
+    # - name: dev
+    #   if: ${{ steps.upstreambranch.outputs.env == 'dev' }}
+    #   run: |
+    #     echo "hello dev"
+    # - name: prd
+    #   if: ${{ steps.upstreambranch.outputs.env == 'prd' }}
+    #   run: |
+    #     echo "hello prd"
+    - name: apply
+      id: apply
+      run: |
+        result=$(ls -al)
+        out="${result//$'\n'/\\n}"
+        echo "::set-output name=out::$out"
+    - name: apply success message
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const msg = `## outputs:\n${{ steps.apply.outputs.out }}`
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: msg
+          })

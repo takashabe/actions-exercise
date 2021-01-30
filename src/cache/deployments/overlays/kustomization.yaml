@@ -2,10 +2,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 images:
-- digest: d83b9d2405f6bb3f07488731ae4bf402cc215aed
-  name: app_image
-  newName: foo
-
+- digest: 3eeea23efe53
+  name: takashabe/edge-exporter-example
+  newName: takashabe/edge-exporter-example
 
 patchesStrategicMerge:
 - deployment.yaml

@@ -1,0 +1,41 @@
+name: sandbox
+
+on:
+  workflow_dispatch:
+    inputs:
+      vars:
+        description: ''
+        required: false
+        default: 'a,b,c'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        item: [a,b,c]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: create pull-request
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WORKING_BRANCH: 'pre-release/${{ github.run_id }}'
+      run: |
+        git config --global user.name "Github Actions"
+        git switch -c $WORKING_BRANCH origin/master
+        touch "${{ matrix.item }}-$(date '+%s')"
+        git status
+        git add .
+        git commit -m "[build] ${{ matrix.item }}"
+        ./hack/retryable-push.sh $WORKING_BRANCH
+  pull-request:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: 'pre-release/${{ github.run_id }}'
+    - name: create pull-request
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: hub pull-request -m "[pre-release] ${{ github.sha }}" -b master
