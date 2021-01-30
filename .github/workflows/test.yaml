@@ -49,6 +49,7 @@ jobs:
         touch ${{ matrix.files }}
         git config --global user.name "Github Actions"
         git switch -c $BUILD_BRANCH origin/$PRE_RELEASE_BRANCH
+        git add .
         git commit -am "[build] ${{ matrix.files }}"
         ./hack/retryable-gitpush.sh $BUILD_BRANCH
   generate-pull-request:
