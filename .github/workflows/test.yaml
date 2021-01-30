@@ -46,6 +46,7 @@ jobs:
         BUILD_BRANCH: 'build/${{ github.run_id }}'
         PRE_RELEASE_BRANCH: 'pre-release'
       run: |
+        touch ${{ matrix.files }}
         git config --global user.name "Github Actions"
         git switch -c $BUILD_BRANCH origin/$PRE_RELEASE_BRANCH
         git commit -am "[build] ${{ matrix.files }}"
