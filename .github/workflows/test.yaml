@@ -27,7 +27,6 @@ jobs:
         git config --global user.name "Github Actions"
         git switch -c $PRE_RELEASE_BRANCH ${{ github.ref }}
 
-        dateVer=$(date '+%Y%m%d-%H%M%S')
         git push origin $PRE_RELEASE_BRANCH
         hub pull-request -m "[pre-release] $(date '+%Y%m%d-%H%M%S')" -b release
   build:
@@ -46,7 +45,8 @@ jobs:
         BUILD_BRANCH: 'build/${{ github.run_id }}'
         PRE_RELEASE_BRANCH: 'pre-release'
       run: |
-        touch ${{ matrix.files }}
+        dateVer=$(date '+%Y%m%d-%H%M%S')
+        touch "${{ matrix.files }}-$dateVer"
         git config --global user.name "Github Actions"
         git switch -c $BUILD_BRANCH origin/$PRE_RELEASE_BRANCH
         git add .
