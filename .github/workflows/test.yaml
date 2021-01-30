@@ -15,6 +15,7 @@ jobs:
         PRE_RELEASE_BRANCH: 'pre-release'
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        git branch -a
         out=$(git branch -a | grep "remotes/origin/$PRE_RELEASE_BRANCH$")
         if [ $? -ne 0 ]; then
           # 既に作成済みであればスキップ
