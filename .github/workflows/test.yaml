@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  test:
+  setup:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -30,3 +30,34 @@ jobs:
         git commit -am "pre-release $dateVer"
         git push origin $PRE_RELEASE_BRANCH
         hub pull-request -m "[pre-release] $(date '+%Y%m%d-%H%M%S')" -b release
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        files: [a, b, c]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: 'pre-release'
+    - name: build commit
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BUILD_BRANCH: 'build/${{ github.run_id }}'
+      run: |
+        git config --global user.name "Github Actions"
+        git switch -c $BUILD_BRANCH origin/$PRE_RELEASE_BRANCH
+        git commit -am "[build] ${{ matrix.files }}"
+        ./hack/retryable-gitpush.sh $BUILD_BRANCH
+  generate-pull-request:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: build/${{ github.run_id }} # refernce: BUILD_BRANCH
+    - name: create pull-request
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PRE_RELEASE_BRANCH: 'pre-release'
+      run: hub pull-request -m "[build] $(date '+%Y%m%d-%H%M%S')" -b $PRE_RELEASE_BRANCH
