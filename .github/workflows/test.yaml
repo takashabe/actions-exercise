@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: create pre-release branch
       env:
         PRE_RELEASE_BRANCH: 'pre-release'
