@@ -28,7 +28,6 @@ jobs:
         git switch -c $PRE_RELEASE_BRANCH ${{ github.ref }}
 
         dateVer=$(date '+%Y%m%d-%H%M%S')
-        git commit -am "pre-release $dateVer"
         git push origin $PRE_RELEASE_BRANCH
         hub pull-request -m "[pre-release] $(date '+%Y%m%d-%H%M%S')" -b release
   build:
