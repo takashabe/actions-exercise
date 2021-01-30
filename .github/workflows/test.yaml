@@ -2,20 +2,28 @@ name: test
 
 on:
   push:
-    branches:
-      - 'pre-release/*'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - uses: anothrNick/github-tag-action@1.22.0
+    - name: create pre-release branch
       env:
+        PRE_RELEASE_BRANCH: 'pre-release'
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        DEFAULT_BUMP: minor
-        WITH_V: true
-        DRY_RUN: true
-        RELEASE_BRANCHES: 'pre-release'
+      run: |
+        out=$(git branch -a | grep "remotes/origin/$PRE_RELEASE_BRANCH$")
+        if [ $? -ne 0 ]; then
+          # 既に作成済みであればスキップ
+          echo "skip create pre-release branch"
+          exit 0
+        fi
+
+        git config --global user.name "Github Actions"
+        git switch -c $PRE_RELEASE_BRANCH ${{ github.ref }}
+
+        dateVer=$(date '+%Y%m%d-%H%M%S')
+        git commit -am "pre-release $dateVer"
+        git push origin $PRE_RELEASE_BRANCH
+        hub pull-request -m "[pre-release] $(date '+%Y%m%d-%H%M%S')" -b release
