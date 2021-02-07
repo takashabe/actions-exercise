@@ -1,54 +1,16 @@
 name: release
 
 on: 
-  pull_request:
-    types:
-    - closed
+  push:
+    branches: [release]
 
 jobs:
-  create_release_pr:
-    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'pre-release')
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout master
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
-    - uses: actions/setup-go@v2
-      with:
-        go-version: '^1.14.6'
-
-    - uses: anothrNick/github-tag-action@1.22.0
-      id: tag_bump
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        DEFAULT_BUMP: major
-        WITH_V: true
-        DRY_RUN: true
-        RELEASE_BRANCHES: '*'
-
-    - uses: hmarr/debug-action@v1.0.0
-
-    - name: publish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GO111MODULE: on
-        RELEASE_BRANCH: release
-      run: |
-        go get github.com/Songmu/ghch/cmd/ghch
-        echo -e "[release] ${{ steps.tag_bump.outputs.new_tag }}\n" > _CHANGELOG
-        ghch --from origin/$RELEASE_BRANCH --format markdown >> _CHANGELOG
-        hub pull-request --base $RELEASE_BRANCH --head master --file _CHANGELOG
-
-  release_tag:
-    if: github.event.pull_request.merged == true && github.head_ref == 'master' && github.base_ref == 'release'
+  run:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-
     - uses: anothrNick/github-tag-action@1.22.0
       id: tag_bump
       env:
@@ -56,23 +18,27 @@ jobs:
         DEFAULT_BUMP: major
         WITH_V: true
         RELEASE_BRANCHES: release
-
     - uses: actions/setup-go@v2
       with:
         go-version: '^1.14.6'
-
     - name: create changelog
       id: changelog
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         go get github.com/Songmu/ghch/cmd/ghch
-        ghch --next-version ${{ steps.tag_bump.outputs.new_tag }} --format markdown > changelog.md
-
+        ghch --next-version ${{ steps.tag_bump.outputs.new_tag }} --format markdown > _CHANGELOG
     - uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.tag_bump.outputs.new_tag }}
         release_name: 'Release ${{ steps.tag_bump.outputs.new_tag }}'
-        body_path: ./changelog.md
+        body_path: ./_CHANGELOG
         draft: false
         prerelease: false
+    - name: create release2master PR
+      run: |
+        git config --global user.name "Github Actions"
+        # TODO: automergeオプションが実装されたら乗り換える https://github.com/cli/cli/issues/2619
+        hub pull-request -m "[release 2 master] $(date '+%Y%m%d-%H%M%S')" -b master
