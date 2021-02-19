@@ -12,6 +12,7 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
+    - uses: github-developer/setup-gh@v1
     - name: debug
       run: |
         gh --version
