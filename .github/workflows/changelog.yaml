@@ -12,6 +12,10 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
     - name: update description
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -22,9 +26,7 @@ jobs:
           exit 0
         fi
         gh pr edit $pr_number --body "$(cat _CHANGELOG)"
-    # - uses: actions/checkout@v2
-    #   with:
-    #     fetch-depth: 0
+
     # - name: setup-gh
     #   run: |
     #     brew update
