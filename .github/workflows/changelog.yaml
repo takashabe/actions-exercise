@@ -26,14 +26,12 @@ jobs:
       run: |
         go get github.com/Songmu/ghch/cmd/ghch
         ghch --from origin/$RELEASE_BRANCH --format markdown > _CHANGELOG
-        cat _CHANGELOG
     - name: update description
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        pr_number=$(gh pr list --base release | grep 'pre-release2' | cut -f 1)
+        pr_number=$(gh pr list --base release | grep 'pre-release' | cut -f 1)
         if [ -z $pr_number ]; then
-          echo "pr number is null"
           exit 0
         fi
         gh pr edit $pr_number --body "$(cat _CHANGELOG)"
