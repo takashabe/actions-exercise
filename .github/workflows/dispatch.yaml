@@ -2,6 +2,8 @@ name: call_another_workflow
 
 on:
   push:
+    branches-ignore:
+      - '**'
 
 jobs:
   test:

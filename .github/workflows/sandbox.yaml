@@ -1,12 +1,15 @@
 name: sandbox
 
 on:
-  workflow_dispatch:
-    inputs:
-      vars:
-        description: ''
-        required: false
-        default: 'a,b,c'
+  push:
+    branches-ignore:
+      - '**'
+  # workflow_dispatch:
+  #   inputs:
+  #     vars:
+  #       description: ''
+  #       required: false
+  #       default: 'a,b,c'
 
 jobs:
   build:
