@@ -2,7 +2,10 @@ name: release
 
 on: 
   push:
-    branches: [release]
+    branches-ignore:
+      - '**'
+  # push:
+  #   branches: [release]
 
 jobs:
   run:
@@ -38,7 +41,9 @@ jobs:
         draft: false
         prerelease: false
     - name: create release2master PR
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git config --global user.name "Github Actions"
         # TODO: automergeオプションが実装されたら乗り換える https://github.com/cli/cli/issues/2619
-        hub pull-request -m "[release 2 master] $(date '+%Y%m%d-%H%M%S')" -b master
+        hub pull-request -m "[release 2 master] $(date '+%Y%m%d-%H%M%S')" -b main
