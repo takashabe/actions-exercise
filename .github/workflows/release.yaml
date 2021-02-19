@@ -2,7 +2,10 @@ name: release
 
 on: 
   push:
-    branches: [release]
+    branches-ignore:
+      - '**'
+  # push:
+  #   branches: [release]
 
 jobs:
   run:
