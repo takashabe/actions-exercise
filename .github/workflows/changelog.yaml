@@ -20,7 +20,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RELEASE_BRANCH: release
-        PRERELEASE_BRANCH: pre-release
+        PRERELEASE_BRANCH: pre-release2
       run: |
         pr_number=$(gh pr list --base $RELEASE_BRANCH | grep $PRERELEASE_BRANCH | cut -f 1)
         if [ -z $pr_number ]; then
