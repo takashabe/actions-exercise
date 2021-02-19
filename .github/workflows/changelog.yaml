@@ -12,9 +12,9 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-    - uses: github-developer/setup-gh@v1
     - name: debug
       run: |
+        apt update gh
         gh --version
 
     # - uses: actions/checkout@v2
