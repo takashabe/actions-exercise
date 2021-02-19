@@ -1,7 +1,9 @@
-name: test
+name: create pre-release branch
 
 on:
   push:
+    branches-ignore:
+      - '**'
 
 jobs:
   setup:
