@@ -1,0 +1,30 @@
+name: update changelog
+
+on: 
+  push:
+    branches:
+    - 'pre-release'
+  # push:
+  #   branches-ignore:
+  #     - '**'
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: changelog
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        RELEASE_BRANCH: release
+      run: |
+        go get github.com/Songmu/ghch/cmd/ghch
+        ghch --from origin/$RELEASE_BRANCH --format markdown > _CHANGELOG
+        cat _CHANGELOG
+    - name: update description
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh pr edit 130 --body "$(cat _CHANGELOG)"
