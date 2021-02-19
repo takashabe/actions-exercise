@@ -14,7 +14,9 @@ jobs:
     steps:
     - name: debug
       run: |
-        apt update gh
+        # curl -sLJO https://github.com/cli/cli/releases/download/v1.6.1/gh_1.6.1_linux_amd64.tar.gz
+        # apt update gh
+        brew intall gh
         gh --version
 
     # - uses: actions/checkout@v2
