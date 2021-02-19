@@ -35,4 +35,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         pr_number=$(gh pr list --base release | grep 'pre-release' | cut -f 1)
-        gh pr edit $(pr_number) --body "$(cat _CHANGELOG)"
+        gh pr edit $pr_number --body "$(cat _CHANGELOG)"
