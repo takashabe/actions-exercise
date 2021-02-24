@@ -42,6 +42,11 @@ jobs:
         RELEASE_BRANCH: release
         # PRE_RELEASE_PR_NUMBER: ${{ steps.pre_release_pr.output.pr_number }}
       run: |
+        echo "try go get"
         go get github.com/Songmu/ghch/cmd/ghch
+
+        echo "try ghch"
         ghch --from origin/$RELEASE_BRANCH --format markdown > _CHANGELOG
+
+        echo "try gh pr edit"
         gh pr edit $pr_number --body "$(cat _CHANGELOG)"
