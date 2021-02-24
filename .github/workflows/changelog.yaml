@@ -1,12 +1,12 @@
 name: update changelog
 
 on: 
-  push:
-    branches:
-    - 'pre-release'
   # push:
-  #   branches-ignore:
-  #     - '**'
+  #   branches:
+  #   - 'pre-release'
+  push:
+    branches-ignore:
+      - '**'
 
 jobs:
   run:
