@@ -29,10 +29,6 @@ jobs:
         fi
 
         echo "::set-output name=pr_number::$pr_number"
-    # - name: setup-gh
-    #   run: |
-    #     brew update
-    #     brew install gh
     - uses: actions/setup-go@v2
       with:
         go-version: '^1.15'
@@ -40,17 +36,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RELEASE_BRANCH: release
-        PRE_RELEASE_PR_NUMBER: ${{ steps.pre_release_pr.output.pr_number }}
+        PRE_RELEASE_PR_NUMBER: ${{ steps.pre_release_pr.outputs.pr_number }}
       run: |
-        gh --version
-
-        echo "try go get"
         go get github.com/Songmu/ghch/cmd/ghch
-
-        echo "try ghch"
         ghch --from origin/$RELEASE_BRANCH --format markdown > _CHANGELOG
-
-        echo "try gh pr edit"
-        echo "number = $PRE_RELEASE_PR_NUMBER"
-        echo "changelog = $(cat _CHANGELOG)"
         gh pr edit $PRE_RELEASE_PR_NUMBER --body "$(cat _CHANGELOG)"
