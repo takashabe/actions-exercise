@@ -40,7 +40,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RELEASE_BRANCH: release
-        PRE_RELEASE_PR_NUMBER: ${{ steps.pre_release_pr.output.pr_number }}
+        # PRE_RELEASE_PR_NUMBER: ${{ steps.pre_release_pr.output.pr_number }}
       run: |
         go get github.com/Songmu/ghch/cmd/ghch
         ghch --from origin/$RELEASE_BRANCH --format markdown > _CHANGELOG
