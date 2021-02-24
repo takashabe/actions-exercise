@@ -51,4 +51,4 @@ jobs:
         ghch --from origin/$RELEASE_BRANCH --format markdown > _CHANGELOG
 
         echo "try gh pr edit"
-        # gh pr edit $pr_number --body "$(cat _CHANGELOG)"
+        gh pr edit $pr_number --body "$(cat _CHANGELOG)"
