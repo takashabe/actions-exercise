@@ -12,4 +12,4 @@ jobs:
     steps:
       - uses: actions/setup-go@v2
         with:
-          go-version: ${{ GOVERSION }}
+          go-version: $GOVERSION
