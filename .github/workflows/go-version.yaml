@@ -3,13 +3,10 @@ name: go-version
 on:
   push:
 
-env:
-  GOVERSION: '1.17.0'
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v2
         with:
-          go-version: $GOVERSION
+          go-version: '1.17.0'
