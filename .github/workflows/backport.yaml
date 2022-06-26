@@ -19,4 +19,4 @@ jobs:
           gh pr create -B backport -t "main to backport" -b ""
       - name: merge pull-request
         run: |
-          gh pr merge --auto
+          gh pr merge --auto --merge
