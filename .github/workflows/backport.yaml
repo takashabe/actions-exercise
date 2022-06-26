@@ -16,4 +16,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: create pull-request
         run: |
-          gh pr create -B backport -t "main to backport" -b ""
+          gh pr create -B backport -t "main to backport2" -b ""
