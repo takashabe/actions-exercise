@@ -1,0 +1,19 @@
+name: backport
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backport:
+    runs-on: ubuntu-latest
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: create pull-request
+        run: |
+          gh pr create -B backport -t "main to backport2" -b ""
