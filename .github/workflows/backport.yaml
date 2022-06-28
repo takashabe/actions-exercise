@@ -20,7 +20,7 @@ jobs:
       - name: check exists pull-request
         id: check_pr
         run: |
-          exists_pr=$(gh pr list --head ${HEAD_BRANCH} | awk '{print $1}')
+          exists_pr=$(gh pr list --head $HEAD_BRANCH | awk '{print $1}')
           if [ -z "$exists_pr" ]; then
             echo "::set-output name=exists_pr::true"
           else
@@ -29,7 +29,7 @@ jobs:
       - name: create pull-request
         if: ${{ steps.check_pr.outputs.exists_pr == 'false' }}
         run: |
-          gh pr create --base ${BASE_BRANCH} -t "[backport] ${HEAD_BRANCH} to ${BASE_BRANCH}" -b ""
+          gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to ${BASE_BRANCH}" -b ""
       - name: merge pull-request
         run: |
           gh pr merge --auto --merge
