@@ -22,9 +22,9 @@ jobs:
         run: |
           exists_pr=$(gh pr list --head $HEAD_BRANCH | awk '{print $1}')
           if [ -z "$exists_pr" ]; then
-            echo "::set-output name=exists_pr::true"
-          else
             echo "::set-output name=exists_pr::false"
+          else
+            echo "::set-output name=exists_pr::true"
           fi
       - name: create pull-request
         if: ${{ steps.check_pr.outputs.exists_pr == 'false' }}
