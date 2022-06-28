@@ -1,11 +1,9 @@
 name: backport
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types:
-      - closed
 
 jobs:
   backport:
@@ -13,12 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      HEAD_BRANCH: ${{ github.base_ref }}
       BASE_BRANCH: backport
     steps:
       - uses: actions/checkout@v2
+      - name: extract branch name
+        id: extract_branch
+        run: |
+          echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
       - name: check exists pull-request
         id: check_pr
+        env:
+          HEAD_BRANCH: ${{ steps.extract_branch.outputs.branch }}
         run: |
           exists_pr=$(gh pr list --head $HEAD_BRANCH | awk '{print $1}')
           if [ -z "$exists_pr" ]; then
@@ -28,8 +31,10 @@ jobs:
           fi
       - name: create pull-request
         if: ${{ steps.check_pr.outputs.exists_pr == 'false' }}
+        env:
+          HEAD_BRANCH: ${{ steps.extract_branch.outputs.branch }}
         run: |
-          gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to ${BASE_BRANCH}" -b ""
+          gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to $BASE_BRANCH" -b ""
       - name: merge pull-request
         run: |
           gh pr merge --auto --merge
