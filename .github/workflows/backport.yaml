@@ -16,9 +16,6 @@ jobs:
       BASE_BRANCH: backport
     steps:
       - uses: actions/checkout@v2
-      - name: create pull-request
-        run: |
-          gh pr create --base ${BASE_BRANCH} -t "[backport] main to ${BASE_BRANCH}" -b ""
       - name: check exists pull-request
         run: |
           exists_pr=$(gh pr list --head backport | awk '{print $1}')
@@ -27,8 +24,11 @@ jobs:
           else
             echo "::set-output name=exists_pr::false"
           end
-      - name: merge pull-request
+      - name: create pull-request
         if: ${{ needs.generate-matrix.outputs.exists_pr == 'false' }}
+        run: |
+          gh pr create --base ${BASE_BRANCH} -t "[backport] main to ${BASE_BRANCH}" -b ""
+      - name: merge pull-request
         run: |
           gh pr merge --auto --merge
 
