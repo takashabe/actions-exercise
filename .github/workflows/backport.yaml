@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      HEAD_BRANCH: ${{ github.base_href }}
+      HEAD_BRANCH: ${{ github.base_ref }}
       BASE_BRANCH: backport
     steps:
       - uses: actions/checkout@v2
@@ -27,9 +27,9 @@ jobs:
             echo "::set-output name=exists_pr::false"
           fi
       - name: create pull-request
-        if: ${{ needs.check_pr.outputs.exists_pr == 'false' }}
+        if: ${{ steps.check_pr.outputs.exists_pr == 'false' }}
         run: |
-          gh pr create --base ${BASE_BRANCH} -t "[backport] main to ${BASE_BRANCH}" -b ""
+          gh pr create --base ${BASE_BRANCH} -t "[backport] ${HEAD_BRANCH} to ${BASE_BRANCH}" -b ""
       - name: merge pull-request
         run: |
           gh pr merge --auto --merge
