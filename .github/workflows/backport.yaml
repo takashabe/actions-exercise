@@ -12,12 +12,37 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      BASE_BRANCH: backport
     steps:
       - uses: actions/checkout@v2
       - name: create pull-request
         run: |
-          gh pr create -B backport -t "main to backport2aaa" -b ""
+          gh pr create --base ${BASE_BRANCH} -t "[backport] main to ${BASE_BRANCH}" -b ""
+      - name: check exists pull-request
+        run: |
+          exists_pr=$(gh pr list --head backport | awk '{print $1}')
+          if [ -z "$exists_pr" ]; then
+            echo "::set-output name=exists_pr::true"
+          else
+            echo "::set-output name=exists_pr::false"
+          end
       - name: merge pull-request
+        if: ${{ needs.generate-matrix.outputs.exists_pr == 'false' }}
         run: |
           gh pr merge --auto --merge
+
+  notification:
+    needs: backport
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+    - uses: technote-space/workflow-conclusion-action@v2
+    - uses: 8398a7/action-slack@v3
+      if: env.WORKFLOW_CONCLUSION != 'skipped'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      with:
+        status: ${{ env.WORKFLOW_CONCLUSION }}
+        fields: repo,commit,ref,workflow,author,message
+        author_name: ${{ github.workflow }}
