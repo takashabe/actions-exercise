@@ -33,6 +33,9 @@ jobs:
         env:
           HEAD_BRANCH: ${{ steps.extract_branch.outputs.branch }}
         run: |
+          backport_branch="$HEAD_BRANCH_merge_$(date '+%Y%m%d-%H%M%S'))"
+          git config --global user.name "Github Actions"
+          git switch -c $backport_branch ${{ github.ref }}
           gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to $BASE_BRANCH" -b ""
       - name: merge pull-request
         run: |
