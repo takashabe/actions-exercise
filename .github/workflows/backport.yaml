@@ -37,6 +37,7 @@ jobs:
           git config --global user.name "Github Actions"
           git switch -c $merge_branch ${{ github.ref }}
           git push origin $merge_branch
+          sleep 2
           gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to $BASE_BRANCH $(date '+%Y%m%d-%H%M%S')" -b ""
       - name: merge pull-request
         run: |
