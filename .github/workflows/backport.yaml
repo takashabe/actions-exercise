@@ -33,11 +33,12 @@ jobs:
         env:
           HEAD_BRANCH: ${{ steps.extract_branch.outputs.branch }}
         run: |
-          backport_branch="${HEAD_BRANCH}_merge_$(date '+%Y%m%d%H%M%S')"
+          merge_branch="${HEAD_BRANCH}_merge_$(date '+%Y%m%d%H%M%S')"
           git config --global user.name "Github Actions"
-          git switch -c $backport_branch ${{ github.ref }}
-          git push origin $backport_branch
-          gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to $BASE_BRANCH" -b ""
+          git switch -c $merge_branch ${{ github.ref }}
+          git push origin $merge_branch
+          sleep 2
+          gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to $BASE_BRANCH $(date '+%Y%m%d-%H%M%S')" -b ""
       - name: merge pull-request
         run: |
           gh pr merge --auto --merge
