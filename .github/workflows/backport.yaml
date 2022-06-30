@@ -38,7 +38,8 @@ jobs:
           git switch -c $merge_branch ${{ github.ref }}
           git push origin $merge_branch
           sleep 2
-          gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to $BASE_BRANCH $(date '+%Y%m%d-%H%M%S')" -b ""
+
+          gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to $BASE_BRANCH $(date '+%Y%m%d-%H%M%S')" -b "" --reviewer ${{ github.actor }}
       - name: merge pull-request
         run: |
           gh pr merge --auto --merge
