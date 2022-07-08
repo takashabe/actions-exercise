@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - main
+      - backport-head
 
 jobs:
   backport:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      BASE_BRANCH: backport
     steps:
       - uses: actions/checkout@v2
       - name: extract branch name
@@ -32,6 +32,8 @@ jobs:
         if: ${{ steps.check_pr.outputs.exists_pr == 'false' }}
         env:
           HEAD_BRANCH: ${{ steps.extract_branch.outputs.branch }}
+          DEFAULT_BASE_BRANCH: backport
+          HOTFIX_BASE_BRANCH: backport_hotfix
         run: |
           merge_branch="${HEAD_BRANCH}_merge_$(date '+%Y%m%d%H%M%S')"
           git config --global user.name "Github Actions"
@@ -39,7 +41,12 @@ jobs:
           git push origin $merge_branch
           sleep 2
 
-          gh pr create --base $BASE_BRANCH -t "[backport] $HEAD_BRANCH to $BASE_BRANCH $(date '+%Y%m%d-%H%M%S')" -b "" --reviewer ${{ github.actor }}
+          base_branch=$DEFAULT_BASE_BRANCH
+          if [ $HEAD_BRANCH = 'main' ] || [ $HEAD_BRANCH = 'master' ]; then
+            base_branch=$HOTFIX_BASE_BRANCH
+          fi
+
+          gh pr create --base $base_branch -t "[backport] $HEAD_BRANCH to $base_branch $(date '+%Y%m%d-%H%M%S')" -b "" --reviewer ${{ github.actor }}
       - name: merge pull-request
         run: |
           gh pr merge --auto --merge
