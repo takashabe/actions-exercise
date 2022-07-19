@@ -23,9 +23,5 @@ jobs:
       with:
         issue-number: 165
         body: |
-          This is a multi-line test comment
-          - With GitHub **Markdown** :sparkles:
-          - Created by [create-or-update-comment][1]
-
-          [1]: https://github.com/peter-evans/create-or-update-comment
-        reactions: '+1'
+          Hi ${{ github.author }} :wave:
+          Failed Job ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
