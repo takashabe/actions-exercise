@@ -23,5 +23,5 @@ jobs:
       with:
         issue-number: 165
         body: |
-          Hi ${{ github.author }} :wave:
-          Failed Job ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+          Hi ${{ github.actor }} :wave:
+          Failed Job ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
