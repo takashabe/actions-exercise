@@ -1,0 +1,31 @@
+name: notify-failed
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notification:
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+    - uses: technote-space/workflow-conclusion-action@v2
+    - uses: 8398a7/action-slack@v3
+      if: env.WORKFLOW_CONCLUSION != 'skipped'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      with:
+        status: ${{ env.WORKFLOW_CONCLUSION }}
+        fields: repo,commit,ref,workflow,author,message
+        author_name: ${{ github.workflow }}
+    - uses: peter-evans/create-or-update-comment@v2
+      with:
+        issue-number: 165
+        body: |
+          This is a multi-line test comment
+          - With GitHub **Markdown** :sparkles:
+          - Created by [create-or-update-comment][1]
+
+          [1]: https://github.com/peter-evans/create-or-update-comment
+        reactions: '+1'
