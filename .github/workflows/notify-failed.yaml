@@ -6,6 +6,11 @@ on:
       - main
 
 jobs:
+  job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
+
   notification:
     if: always()
     runs-on: ubuntu-latest
@@ -20,8 +25,9 @@ jobs:
         fields: repo,commit,ref,workflow,author,message
         author_name: ${{ github.workflow }}
     - uses: peter-evans/create-or-update-comment@v2
+      if: env.WORKFLOW_CONCLUSION == 'failure'
       with:
         issue-number: 165
         body: |
           Hi @${{ github.actor }} :wave:
-          Failed Job ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          Failed Job ${{ GITHUB_WORKFLOW }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
