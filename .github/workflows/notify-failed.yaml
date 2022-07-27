@@ -31,4 +31,4 @@ jobs:
         issue-number: 165
         body: |
           Hi @${{ github.actor }} :wave:
-          Failed Job ${{ GITHUB_WORKFLOW }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          Failed Job ${{ github.workflow }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
