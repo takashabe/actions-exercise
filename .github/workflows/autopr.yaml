@@ -1,0 +1,62 @@
+name: backport
+
+on:
+  push:
+    branches:
+      - feature/**
+      - feat/**
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: extract branch name
+        id: extract_branch
+        run: |
+          echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+      - name: check exists pull-request
+        id: check_pr
+        env:
+          HEAD_BRANCH: ${{ steps.extract_branch.outputs.branch }}
+        run: |
+          exists_pr=$(gh pr list --head $HEAD_BRANCH | awk '{print $1}')
+          if [ -z "$exists_pr" ]; then
+            echo "::set-output name=exists_pr::false"
+          else
+            echo "::set-output name=exists_pr::true"
+          fi
+      - name: create pull-request
+        if: ${{ steps.check_pr.outputs.exists_pr == 'false' }}
+        env:
+          HEAD_BRANCH: ${{ steps.extract_branch.outputs.branch }}
+          DEFAULT_BASE_BRANCH: main
+        run: |
+          merge_branch="${HEAD_BRANCH}_merge_$(date '+%Y%m%d%H%M%S')"
+          git config --global user.name "Github Actions"
+          git switch -c $merge_branch ${{ github.ref }}
+          git push origin $merge_branch
+          sleep 2
+
+          base_branch=$DEFAULT_BASE_BRANCH
+          gh pr create --base $base_branch -t "[auto pr] $HEAD_BRANCH to $base_branch $(date '+%Y%m%d-%H%M%S')" -b "" --reviewer ${{ github.actor }}
+      - name: merge pull-request
+        run: |
+          gh pr merge --auto --merge
+
+  notification:
+    needs: backport
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+    - uses: technote-space/workflow-conclusion-action@v2
+    - uses: 8398a7/action-slack@v3
+      if: env.WORKFLOW_CONCLUSION != 'skipped'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      with:
+        status: ${{ env.WORKFLOW_CONCLUSION }}
+        fields: repo,commit,ref,workflow,author,message
+        author_name: ${{ github.workflow }}
