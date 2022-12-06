@@ -1,4 +1,4 @@
-name: backport
+name: feature
 
 on:
   push:
@@ -47,7 +47,7 @@ jobs:
           gh pr merge --auto --merge
 
   notification:
-    needs: backport
+    needs: pr
     if: always()
     runs-on: ubuntu-latest
     steps:
