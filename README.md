@@ -1,3 +1,3 @@
 # actions-exercise
 
-autopr
+autopr3
