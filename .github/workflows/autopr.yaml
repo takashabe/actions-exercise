@@ -41,10 +41,7 @@ jobs:
           sleep 2
 
           base_branch=$DEFAULT_BASE_BRANCH
-          gh pr create --base $base_branch -t "[auto pr] $HEAD_BRANCH to $base_branch $(date '+%Y%m%d-%H%M%S')" -b "" --reviewer ${{ github.actor }}
-      - name: merge pull-request
-        run: |
-          gh pr merge --auto --merge
+          gh pr create --base $base_branch -t "[auto pr] $HEAD_BRANCH to $base_branch $(date '+%Y%m%d-%H%M%S')" --reviewer ${{ github.actor }}
 
   notification:
     needs: pr
