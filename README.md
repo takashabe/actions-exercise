@@ -1,3 +1,3 @@
 # actions-exercise
 
-autopr4
+pr-target kick
