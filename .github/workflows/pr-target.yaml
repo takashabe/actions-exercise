@@ -1,0 +1,12 @@
+name: pr-target
+
+on:
+  pull_request_target:
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: edit pull-request
+        run: |
+          echo test
