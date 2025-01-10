@@ -46,7 +46,7 @@ jobs:
             base_branch=$HOTFIX_BASE_BRANCH
           fi
 
-          gh pr create --base $base_branch -t "[backport] $HEAD_BRANCH to $base_branch $(date '+%Y%m%d-%H%M%S')" -b "" --reviewer ${{ github.actor }}
+          gh pr create --base $base_branch --head $merge_branch -t "[backport] $HEAD_BRANCH to $base_branch $(date '+%Y%m%d-%H%M%S')" -b "" --reviewer ${{ github.actor }}
       - name: merge pull-request
         run: |
           gh pr merge --auto --merge
